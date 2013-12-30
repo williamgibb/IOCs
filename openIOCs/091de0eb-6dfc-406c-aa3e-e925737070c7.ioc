@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<ioc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="091de0eb-6dfc-406c-aa3e-e925737070c7" last-modified="2013-12-30T09:31:27" xmlns="http://schemas.mandiant.com/2010/ioc">
+  <short_description>ProjectHook</short_description>
+  <description>Point of Sale (POS) Malware -&gt; 16b596de4c0e4d2acdfdd6632c80c070
+
+http://www.arbornetworks.com/asert/wp-content/uploads/2013/12/Dexter-and-Project-Hook-Break-the-Bank.pdf</description>
+  <authored_by>@patrickrolsen</authored_by>
+  <authored_date>2013-12-30T07:41:45</authored_date>
+  <links />
+  <definition>
+    <Indicator operator="OR" id="7fe62393-4f14-4c9a-8402-532807c84026">
+      <IndicatorItem id="7c427daf-eaa1-4f24-b9cc-f79ec69dccb2" condition="contains">
+        <Context document="FileItem" search="FileItem/FilePath" type="mir" />
+        <Content type="string">%appdata%\Resourcing</Content>
+      </IndicatorItem>
+      <Indicator operator="OR" id="8948256c-3ead-42df-8236-4f146ce4e915">
+        <IndicatorItem id="da2d90d9-0bc7-4bcf-a8be-a2c6c8fe408f" condition="contains">
+          <Context document="FileItem" search="FileItem/FilePath" type="mir" />
+          <Content type="string">%windir%\Resourcing</Content>
+        </IndicatorItem>
+        <Indicator operator="AND" id="33fe86d7-99b3-4979-9946-b77fc7edbd2d">
+          <IndicatorItem id="c096ad8f-c94c-47bc-99a5-8503cd2ea416" condition="contains">
+            <Context document="FileItem" search="FileItem/FileName" type="mir" />
+            <Content type="string">lsmon.exe</Content>
+          </IndicatorItem>
+          <Indicator operator="OR" id="95c6a7ef-e5aa-4d7a-bb24-c92569b748c3">
+            <IndicatorItem id="7ad74f11-1c81-40a3-95f7-c0b7d723c00c" condition="contains">
+              <Context document="FileItem" search="FileItem/FileName" type="mir" />
+              <Content type="string">ntfd.dat</Content>
+            </IndicatorItem>
+          </Indicator>
+        </Indicator>
+      </Indicator>
+      <Indicator operator="AND" id="2ccebab1-bd06-4050-bead-4f83509abe71">
+        <IndicatorItem id="7541bb51-8b15-48df-b703-042946b8010d" condition="contains">
+          <Context document="RegistryItem" search="RegistryItem/KeyPath" type="mir" />
+          <Content type="string">HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run</Content>
+        </IndicatorItem>
+        <IndicatorItem id="19f502af-7737-4045-8538-d43edb682853" condition="contains">
+          <Context document="RegistryItem" search="RegistryItem/ValueName" type="mir" />
+          <Content type="string">Memory Resource</Content>
+        </IndicatorItem>
+        <Indicator operator="AND" id="ce5bc049-03be-4a52-bdb5-03c5c1a68475">
+          <IndicatorItem id="2c54a455-c69b-439b-a854-5f1a27783baf" condition="contains">
+            <Context document="RegistryItem" search="RegistryItem/Value" type="mir" />
+            <Content type="string">lsmon.exe</Content>
+          </IndicatorItem>
+        </Indicator>
+      </Indicator>
+      <Indicator operator="AND" id="4e29f932-f28b-4f2d-9e96-e0b33367e274">
+        <IndicatorItem id="03ac9d1c-7517-476d-ac32-e3df03cbcc90" condition="contains">
+          <Context document="ProcessItem" search="ProcessItem/HandleList/Handle/Name" type="mir" />
+          <Content type="string">MTXCTRL</Content>
+        </IndicatorItem>
+      </Indicator>
+      <Indicator operator="OR" id="0ae2dab9-83d8-46d9-8abd-62b58cd0497f">
+        <IndicatorItem id="22716b08-2f35-4fa3-b017-8321fb358db0" condition="contains">
+          <Context document="ProcessItem" search="ProcessItem/StringList/string" type="mir" />
+          <Content type="string" />
+        </IndicatorItem>
+      </Indicator>
+    </Indicator>
+  </definition>
+</ioc>
